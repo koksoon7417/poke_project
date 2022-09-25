@@ -1,13 +1,32 @@
-FROM python:3
+FROM python:3.8-slim-buster
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-WORKDIR /code
-COPY requirements.txt /code/
+ARG SECRET_KEY
+ARG DEBUG
+ARG NAME
+ARG USER
+ARG PASSWORD
+ARG HOST
+ARG DJANGO_ALLOWED_HOSTS
+ARG CORS_ALLOWED_ORIGINS
+
+ENV SECRET_KEY $SECRET_KEY
+ENV DEBUG $DEBUG
+ENV NAME $NAME
+ENV USER $USER
+ENV PASSWORD $PASSWORD
+ENV HOST $HOST
+ENV DJANGO_ALLOWED_HOSTS $DJANGO_ALLOWED_HOSTS
+ENV CORS_ALLOWED_ORIGINS $CORS_ALLOWED_ORIGINS
+
+WORKDIR /backend
+COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-COPY . /code/
+COPY . .
+RUN python manage.py collectstatic --no-input
 
-EXPOSE 8000
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+EXPOSE 9000
+CMD ["gunicorn", "poke_project.wsgi", "--bind", "0.0.0.0:9000"]
