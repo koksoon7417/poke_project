@@ -24,12 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ['SECRET_KEY']
+SECRET_KEY = os.environ.get("SECRET_KEY", "SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ['DEBUG']
+DEBUG = os.environ.get("DEBUG", "TRUE")
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(" ")
 
 # Application definition
 
@@ -65,7 +65,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'poke_project.urls'
 CORS_URLS_REGEX = r"^/.*"
-CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS").split(" ")
+CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS", "http://localhost").split(" ")
 
 if DEBUG:
     CORS_ALLOWED_ORIGINS += [
@@ -98,10 +98,10 @@ WSGI_APPLICATION = 'poke_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ['NAME'], 
-        'USER': os.environ['USER'], 
-        'PASSWORD': os.environ['PASSWORD'],
-        'HOST': os.environ['HOST'], 
+        'NAME': os.environ.get("NAME", "postgres"),
+        'USER': os.environ.get("USER", "postgres"),
+        'PASSWORD': os.environ.get("PASSWORD", "password"),
+        'HOST': os.environ.get("HOST", "localhost"),
         'PORT': '5432',
     }
 }
